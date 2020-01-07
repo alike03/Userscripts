@@ -1,5 +1,7 @@
 # YoutubeUserscripts
 
+## [Install](https://raw.githubusercontent.com/alike03/Userscripts/master/src/YouTubeDocking.user.js)
+
 ## What is YouTube Docking
 YouTube Docking is a script that gives you simple yet useful features. 
 I'm writing this in my free time so don't expect frequent updates.
@@ -47,6 +49,3 @@ If you discover a bug please let me know under the Issues tab.
 - MP3 exporter
 
 - IMDB Links for Movie videos from Movieclips Trailers, Jeremy Jahns, etc..
-
-## Storytime
-After losing Youtube YouTube Center with the new Youtube Design I searched for an alternative. Unfortunately I couldn't find a script that did what I wanted. So I decided to create my own script and add all the things I wanted. 
