@@ -7,7 +7,7 @@
 With this script, you can read the comments while watching the video. When you start scrolling down, as soon as the player leaves the visible area, the player moves to the bottom right corner. Just like the Youtube Mini player. But in this case you can modify the player size by editing the file.
 
 ## Changelog
-#### 2.0.2
+#### 2.0.2 (13 January 2020)
 
 - Enlarged the Mini Player
 - Added Shadow the enhance visibility

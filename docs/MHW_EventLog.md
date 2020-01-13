@@ -7,15 +7,15 @@
 Keep track of the Event Quest Schedule. Mark completed ones and hide them if you want. This script Supports the PC and the Consoles, Monster Hunter World base game, and Icebourne. Each of them is saved separately. The save files are kept in the local storage of the Browser. If you clear your browser cache the save file would be removed. The Save file is also not available if you change your browser.
 
 #### PC Event Quest Schedule
-[Master Rank: Event Quest Schedule](http://game.capcom.com/world/steam/us/schedule-master.html)
-[Low Rank / High Rank: Event Quest Schedule](http://game.capcom.com/world/steam/us/schedule.html)
+- [Master Rank: Event Quest Schedule](http://game.capcom.com/world/steam/us/schedule-master.html)
+- [Low Rank / High Rank: Event Quest Schedule](http://game.capcom.com/world/steam/us/schedule.html)
 #### Console Event Quest Schedule
-[Master Rank: Event Quest Schedule](http://game.capcom.com/world/us/schedule-master.html)
-[Low Rank / High Rank: Event Quest Schedule](http://game.capcom.com/world/uk/schedule.html)
+- [Master Rank: Event Quest Schedule](http://game.capcom.com/world/us/schedule-master.html)
+- [Low Rank / High Rank: Event Quest Schedule](http://game.capcom.com/world/uk/schedule.html)
 
 ## Changelog
 
-#### 1.0.0
+#### 1.0.0 (13 January 2020)
 
 - Mark completed Quests as Done
 - Your progress gets automatically saved
