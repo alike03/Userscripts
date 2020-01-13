@@ -1,51 +1,11 @@
-# YoutubeUserscripts
+# What is Userscript
 
 ## What is YouTube Docking
-YouTube Docking is a script that gives you simple yet useful features. 
-I'm writing this in my free time so don't expect frequent updates.
-If you discover a bug please let me know under the Issues tab.
+A userscript is a program, usually written in JavaScript, for modifying web pages to augment browsing. On browsers such as Firefox or Google Chrome, they are enabled by the use of a userscript manager browser extension such as [Violentmonkey](https://violentmonkey.github.io/get-it), [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey) or [Tampermonkey](https://www.tampermonkey.net).
 
-## [Install](https://raw.githubusercontent.com/alike03/Userscripts/master/src/YouTubeDocking.user.js)
 
-## Features
-- Docks the Player to the Right Bottom side when you Scroll down.
+## [Youtube Docking](docs/YouTubeDocking.md)
+Dock the YouTube player to the bottom right if you scroll down.
 
-## Changelog
-#### 2.0.0
-
-- Redone for the New Design without changing the parent of the video
-
-#### 1.0.2
-
-- Edited Miniplayer looks. Removed white space
-
-- Fixed Cinema mode to Fullscreen
-
-- Fixed Player after changing Page
-
-#### 1.0.1
-
-- Fixed Cinema mode
-
-- Fixed Controls in Minimode
-
-- Fixed Video position from Cinema mode to Miniplayer
-
-- Removed when Video ends
-
-#### 1.0.0
-
-- Rerelease
-
-## Previews
-![Preview](https://i.imgur.com/LlXT7w0.png)
-
-## Coming Soon
-
-- Makes the Bigger Player Fit to the whole Browser.
-
-- Download Video Button
-
-- MP3 exporter
-
-- IMDB Links for Movie videos from Movieclips Trailers, Jeremy Jahns, etc..
+## [Monster Hunter World - Event Log](docs/MHW_EventLog.md)
+Keep track of the Event Quest Schedule. Mark completed ones and hide them if you want.

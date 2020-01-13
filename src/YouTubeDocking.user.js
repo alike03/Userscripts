@@ -2,15 +2,18 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     2.0.1
+// @version     2.0.2
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/youtube.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
 // @downloadURL https://raw.githubusercontent.com/alike03/Userscripts/master/src/YouTubeDocking.user.js
 // @updateURL   https://raw.githubusercontent.com/alike03/Userscripts/master/meta/YouTubeDocking.user.js
-// @match       https://*.youtube.com/*
-// @require     https://code.jquery.com/jquery-3.4.1.min.js
+// @match       http*://*.youtube.com/*
+// @require     https://code.jquery.com/jquery-latest.js
 // ==/UserScript==
+
+let playerWidth = "533px";
+let playerHeight = "300px";
 
 let miniPlayerEnabled = false;
 let miniplayerStatus = false;
@@ -23,6 +26,7 @@ window.addEventListener("load", start);
 function start() {
   if (window.location.href.indexOf('youtube.com/watch?v=') > -1) {
     let targetNode = $('#movie_player');
+    $('<style>.alikeMini { position: fixed; bottom: 20px; right: 20px; width: ' + playerWidth + '; height: ' + playerHeight + '; z-index: 3; box-shadow: 0px 0px 25px 3px;}</style>').appendTo('body');
     observer.observe(targetNode[0], config);
     window.addEventListener('resize', fixVidSize);
     window.addEventListener("scroll", scrolling);
@@ -70,7 +74,6 @@ function activateMiniPlayer() {
       if ($("ytd-player").length) {
         clearInterval(checkExist);
         //move player
-        $('<style>.alikeMini { position: fixed; bottom: 20px; right: 20px; width: 400px; height: 225px; z-index: 3;}</style>').appendTo('body');
         $("ytd-player").addClass("alikeMini");
 
         $("#movie_player .ytp-chrome-bottom .ytp-progress-bar").on("mouseover", blockClick);
@@ -109,8 +112,8 @@ function blockClick(event) {
 
 function fixVidSize() {
   if (miniPlayerEnabled) {
-    $("#movie_player video").css("width", "400px");
-    $("#movie_player video").css("height", "225px");
+    $("#movie_player video").css("width", playerWidth);
+    $("#movie_player video").css("height", playerHeight);
     $("#movie_player video").css("left", "0");
     $("#movie_player .ytp-chrome-bottom").css("width", "calc(100% - 24px)");
   } else {
@@ -124,7 +127,6 @@ function fixVidSize() {
   }
 }
 
-// Options for the observer (which mutations to observe)
 const config = {
   attributes: true,
   childList: false,
@@ -137,7 +139,6 @@ const callback = function (mutationsList, observer) {
   for (let mutation of mutationsList) {
     if (mutation.attributeName === "class") {
       var classList = mutation.target.className;
-      // Do something here with class you're expecting
       if (classList.includes("ended-mode") || classList.includes("ytp-fullscreen")) {
         miniplayerBlock = true;
         miniplayerEnabled = false;
@@ -154,5 +155,3 @@ const callback = function (mutationsList, observer) {
 };
 
 const observer = new MutationObserver(callback);
-
-console.log("Youtube Docking enabled");
