@@ -1,6 +1,8 @@
 # Monster Hunter World - Event Log
 
-## [Install](https://raw.githubusercontent.com/alike03/Userscripts/master/src/MHW_EventLog.user.js)
+## [Install as Userscript](https://raw.githubusercontent.com/alike03/Userscripts/master/src/MHW_EventLog.user.js)
+## [Install as Firefox Extension](https://addons.mozilla.org/en-US/firefox/addon/monster-hunter-world-event-log)
+## [Install as Chrome Extension](https://chrome.google.com/webstore/detail/monster-hunter-world-even/gfckahhngdcclglbcjijcbdelhblelpp)
 
 ## Description
 
@@ -20,6 +22,7 @@ Keep track of the Event Quest Schedule. Mark completed ones and hide them if you
 - Removed jQuery completely (for small performance improvement)
 - Added the option to hide not currently running Events
 - Selected hide options will now be also saved
+- Is now also avaible as Browser Extension
 
 #### 1.0 (13 January 2020)
 
