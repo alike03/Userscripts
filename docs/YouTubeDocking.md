@@ -7,6 +7,12 @@
 With this script, you can read the comments while watching the video. When you start scrolling down, as soon as the player leaves the visible area, the player moves to the bottom right corner. Just like the Youtube Mini player. But in this case you can modify the player size by editing the file.
 
 ## Changelog
+
+#### 2.0.3 (03 February 2020)
+
+- Fixed video position in Fullscreen mode
+- Fixed multiple css entries created on every navigation
+
 #### 2.0.2 (13 January 2020)
 
 - Enlarged the Mini Player
@@ -20,19 +26,14 @@ With this script, you can read the comments while watching the video. When you s
 #### 1.0.2
 
 - Edited Miniplayer looks. Removed white space
-
 - Fixed Cinema mode to Fullscreen
-
 - Fixed Player after changing Page
 
 #### 1.0.1
 
 - Fixed Cinema mode
-
 - Fixed Controls in Minimode
-
 - Fixed Video position from Cinema mode to Miniplayer
-
 - Removed when Video ends
 
 #### 1.0.0

@@ -2,13 +2,13 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     2.0.2
+// @version     2.0.3
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/youtube.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
 // @downloadURL https://raw.githubusercontent.com/alike03/Userscripts/master/src/YouTubeDocking.user.js
 // @updateURL   https://raw.githubusercontent.com/alike03/Userscripts/master/meta/YouTubeDocking.user.js
-// @match       http*://*.youtube.com/*
+// @match       *://*.youtube.com/*
 // @require     https://code.jquery.com/jquery-latest.js
 // ==/UserScript==
 
@@ -20,13 +20,44 @@ let miniplayerStatus = false;
 let miniplayerBlock = false;
 let fullscreen = false;
 
+window.addEventListener("yt-navigate-start", disableMiniPlayer);
 window.addEventListener("yt-navigate-finish", start);
-window.addEventListener("load", start);
+window.addEventListener("load", addCSS);
+
+function addCSS() {
+  let css = [
+    ".alikeMini {",
+    "position: fixed;",
+    "bottom: 20px;",
+    "right: 20px;",
+    "width: " + playerWidth + ";",
+    "height: " + playerHeight + ";",
+    "z-index: 3;",
+    "box-shadow: 0px 0px 25px 3px black;",
+    "background: black;",
+    "}",
+    ".alikeVideo {",
+    "width: 100% !important;",
+    "height: 100% !important;",
+    "top: 0 !important;",
+    "left: 0 !important;",
+    "}",
+  ].join("\n"); {
+    let node = document.createElement("style");
+    node.appendChild(document.createTextNode(css));
+    let heads = document.getElementsByTagName("head");
+    if (heads.length > 0) {
+      heads[0].appendChild(node);
+    } else {
+      document.documentElement.appendChild(node);
+    }
+  }
+}
+
 
 function start() {
   if (window.location.href.indexOf('youtube.com/watch?v=') > -1) {
     let targetNode = $('#movie_player');
-    $('<style>.alikeMini { position: fixed; bottom: 20px; right: 20px; width: ' + playerWidth + '; height: ' + playerHeight + '; z-index: 3; box-shadow: 0px 0px 25px 3px;}</style>').appendTo('body');
     observer.observe(targetNode[0], config);
     window.addEventListener('resize', fixVidSize);
     window.addEventListener("scroll", scrolling);
@@ -91,6 +122,7 @@ function activateMiniPlayer() {
 
 function disableMiniPlayer() {
   if (miniPlayerEnabled === true) {
+    miniPlayerEnabled = false;
     $("ytd-player").removeClass("alikeMini");
 
     $("#movie_player .ytp-chrome-bottom .ytp-progress-bar").off("mouseover", blockClick);
@@ -99,7 +131,6 @@ function disableMiniPlayer() {
     $("#movie_player .ytp-chrome-bottom .ytp-size-button").css("display", "");
     $("#movie_player").addClass(".ytp-large-width-mode .ad-created");
     fixVidSize();
-    miniPlayerEnabled = false;
   }
 }
 
@@ -112,14 +143,12 @@ function blockClick(event) {
 
 function fixVidSize() {
   if (miniPlayerEnabled) {
-    $("#movie_player video").css("width", playerWidth);
-    $("#movie_player video").css("height", playerHeight);
-    $("#movie_player video").css("left", "0");
+    $("#movie_player .html5-video-container").addClass("alikeVideo");
+    $("#movie_player video").addClass("alikeVideo");
     $("#movie_player .ytp-chrome-bottom").css("width", "calc(100% - 24px)");
   } else {
-    $("#movie_player video").css("width", $("#movie_player").width());
-    $("#movie_player video").css("height", $("#movie_player").height());
-    $("#movie_player video").css("left", "0");
+    $("#movie_player .html5-video-container").removeClass("alikeVideo");
+    $("#movie_player video").removeClass("alikeVideo");
     let spacing = 24;
     if (fullscreen)
       spacing *= 2;
