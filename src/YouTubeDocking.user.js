@@ -2,7 +2,7 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     2.0.3
+// @version     2.0.4
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/youtube.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
@@ -112,8 +112,8 @@ function activateMiniPlayer() {
         $("#movie_player .ytp-chrome-bottom .ytp-scrubber-container").css("display", "none");
         $("#movie_player .ytp-chrome-bottom .ytp-size-button").css("display", "none");
         $("#movie_player").removeClass(".ytp-large-width-mode .ad-created");
-        fixVidSize();
         miniPlayerEnabled = true;
+        fixVidSize();
       }
     }, 100);
   }

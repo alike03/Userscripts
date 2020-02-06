@@ -8,6 +8,10 @@ With this script, you can read the comments while watching the video. When you s
 
 ## Changelog
 
+#### 2.0.4 (06 February 2020)
+
+- Fixed video size change not triggering after first scroll
+
 #### 2.0.3 (03 February 2020)
 
 - Fixed video position in Fullscreen mode
