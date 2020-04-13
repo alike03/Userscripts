@@ -8,6 +8,16 @@ With this script, you can read the comments while watching the video. When you s
 
 ## Changelog
 
+#### 3.0.0 (13 April 2020)
+
+- Docked Player size is now changeable in the settings, that can be opened with the button next to the search bar on YouTube (see Preview with red arrow below)
+- Cleared the code quite a bit
+- Big Performance improvement
+- Bugs like big subtitles or weird buttons should not occur anymore
+- In Theater mode, video is now also in docked format scrollable with mouse clicks
+- Docked Player doesn't disappear anymore when the video ends
+- Fixed a bug where the player was small after scrolling back up
+
 #### 2.0.4 (06 February 2020)
 
 - Fixed video size change not triggering after first scroll
@@ -45,4 +55,5 @@ With this script, you can read the comments while watching the video. When you s
 - Init
 
 ## Preview
+![Preview](https://raw.githubusercontent.com/alike03/Userscripts/master/assets/YouTubeDocking3-Preview.png)
 ![Preview](https://raw.githubusercontent.com/alike03/Userscripts/master/assets/YouTubeDocking-Preview.png)
