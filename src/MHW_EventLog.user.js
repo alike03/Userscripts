@@ -2,7 +2,7 @@
 // @name        Monster Hunter World - Event Log
 // @description Keep track of the Event Quest Schedule. Mark completed ones and hide them if you want.
 // @author      alike03
-// @version     1.1
+// @version     1.2
 // @namespace   MHW_EventLog
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/MHW_EventLog-Icon.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
@@ -16,72 +16,91 @@ let settings = [];
 let platform = (window.location.href.indexOf("steam") != -1) ? "steam_" : "console_";
 let filename = platform + window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1).replace(".html", "");
 let localEventList = "localEventList_" + filename;
+let localSavedSettings = "savedSettings";
 
 window.addEventListener('load', function () {
-  if (localStorage.getItem(localEventList) != null)
-    eventList = JSON.parse(localStorage.getItem(localEventList));
-  if (localStorage.getItem("savedSettings") != null)
-    settings = JSON.parse(localStorage.getItem("savedSettings"));
-
+  loadSave();
   addCSS();
   addButtonLocationDiv();
   addButtons();
   addButtonClicks();
   addDoneButton();
+  addExportImport();
 });
 
+function loadSave() {
+  if (localStorage.getItem(localEventList) != null)
+    eventList = JSON.parse(localStorage.getItem(localEventList));
+}
+
+function fileSave() {
+
+  localStorage.setItem(localEventList, JSON.stringify(eventList));
+  localStorage.setItem(localSavedSettings, JSON.stringify(settings));
+}
+
 function addCSS() {
-  let css = [
-    ".alikeStatus {",
-    "border: 2px solid #756b5e;",
-    "padding: 5px 5px 8px;",
-    "margin-top: 15px;",
-    "text-shadow: 2px 2px 8px black;",
-    "cursor: pointer;",
-    "-webkit-user-select: none",
-    "-moz-user-select: none",
-    "-ms-user-select: none",
-    "user-select: none",
-    "}",
-    ".alikeHide,",
-    ".alikeCurrent {",
-    "display: inline-block;",
-    "margin: 0 0 0 10px;",
-    "margin: 0 15px 15px 0;",
-    "margin: 15px 15px 0 0;",
-    "font-size: 1.3rem;",
-    "color: #756b5e;",
-    "}",
-    ".alikeStatus.completed,",
-    "tr.completed .alikeStatus {",
-    "color: white;",
-    "background: #756b5e;",
-    "}",
-    "#wrap table tbody tr.completed {",
-    "opacity: 0.35;",
-    "-webkit-filter: grayscale(100%);",
-    "filter: grayscale(100%);",
-    "animation: animationComplete 1s;",
-    "}",
-    "#wrap table.hide tbody tr.completed,",
-    "#wrap table.notToday tbody tr:not(.disp) {",
-    "display: none !important;",
-    "animation: myfirst 2s;",
-    "}",
-    "@keyframes animationComplete {",
-    "0%   {opacity: 1;}",
-    "100% {opacity: 0.35;}",
-    "}",
-  ].join("\n"); {
-    let node = document.createElement("style");
-    node.appendChild(document.createTextNode(css));
-    let heads = document.getElementsByTagName("head");
-    if (heads.length > 0) {
-      heads[0].appendChild(node);
-    } else {
-      document.documentElement.appendChild(node);
-    }
+  let style = document.createElement('style');
+  style.innerHTML = `
+  .buttonExIm {
+    margin-bottom: 10px !important;
   }
+  
+  .alikeExIm {
+    width: 50%;
+  }
+
+  .alikeExIm,
+  .alikeStatus,
+  .alikeHide,
+  .alikeCurrent {
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .alikeStatus {
+    border: 2px solid #756b5e;
+    padding: 5px 5px 8px;
+    margin-top: 15px;
+    text-shadow: 2px 2px 8px black;
+  }
+
+  .alikeHide,
+  .alikeCurrent {
+    margin: 15px 15px 0 0;
+    font-size: 1.3rem;
+    color: #756b5e;
+  }
+
+  .alikeStatus.completed,
+    tr.completed .alikeStatus {
+    color: white;
+    background: #756b5e;
+  }
+
+  #wrap table tbody tr.completed {
+    opacity: 0.35;
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    animation: animationComplete 1s;
+  }
+
+  #wrap table.hide tbody tr.completed,
+  #wrap table.notToday tbody tr:not(.disp) {
+    display: none !important;
+    animation: myfirst 2s;
+  }
+
+  @keyframes animationComplete {
+    0%   {opacity: 1;}
+    100% {opacity: 0.35;}
+  }
+  `;
+  document.head.appendChild(style);
 }
 
 function addButtonLocationDiv() {
@@ -93,6 +112,12 @@ function addButtonLocationDiv() {
     let butLocClone = buttonLocation.cloneNode(true);
     element[i].appendChild(butLocClone);
   }
+
+  const buttonExIm = document.createElement("div");
+  buttonExIm.classList.add('buttonExIm');
+  buttonExIm.classList.add('terms');
+  let pElement = document.querySelector("#schedule .eventCol");
+  pElement.insertBefore(buttonExIm, pElement.firstChild);
 }
 
 function addButtons() {
@@ -120,7 +145,7 @@ function addButtonClicks() {
       if (this.classList.contains('completed')) {
         elementHide.forEach(element => {
           element.classList.remove('completed');
-          element.parentNode.parentNode.nextElementSibling.classList.remove('hide');          
+          element.parentNode.parentNode.nextElementSibling.classList.remove('hide');
         });
         for (var i = 0; i < settings.length; i++) {
           if (settings[i] === "alikeHide") {
@@ -135,7 +160,7 @@ function addButtonClicks() {
         if (!settings.includes("alikeHide"))
           settings.push("alikeHide");
       }
-      localStorage.setItem("savedSettings", JSON.stringify(settings));
+      fileSave();
     });
   }
 
@@ -145,7 +170,7 @@ function addButtonClicks() {
       if (this.classList.contains('completed')) {
         elementCurrent.forEach(element => {
           element.classList.remove('completed');
-          element.parentNode.parentNode.nextElementSibling.classList.remove('notToday');    
+          element.parentNode.parentNode.nextElementSibling.classList.remove('notToday');
         });
 
         for (var i = 0; i < settings.length; i++) {
@@ -161,7 +186,7 @@ function addButtonClicks() {
         if (!settings.includes("alikeCurrent"))
           settings.push("alikeCurrent");
       }
-      localStorage.setItem("savedSettings", JSON.stringify(settings));
+      fileSave();
     });
   }
 
@@ -184,7 +209,9 @@ function addDoneButton() {
       const element = document.querySelectorAll("table > tbody > tr");
       for (let i = 0; i < element.length; i++) {
         const clone = button.cloneNode(true);
-        clone.onclick = function () { clickDoneButton(this) };
+        clone.onclick = function () {
+          clickDoneButton(this)
+        };
         const eventName = element[i].querySelector(".quest > .title span").textContent;
 
         //Add button and if done mark as done
@@ -212,5 +239,55 @@ function clickDoneButton(button) {
     parent.classList.add('completed');
     eventList.push(eventName);
   }
-  localStorage.setItem(localEventList, JSON.stringify(eventList));
+  fileSave();
+}
+
+function addExportImport() {
+  const buttonDownload = document.createElement("div");
+  buttonDownload.classList.add('alikeExIm');
+  buttonDownload.textContent = "Download Completed Event List";
+  buttonDownload.onclick = function () {
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(eventList));
+    let downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "EventList.json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    return false;
+  };
+
+  const buttonUpload = document.createElement("input");
+  buttonUpload.style.display = "none";
+  buttonUpload.type = "file";
+  buttonUpload.id = "json-upload";
+  buttonUpload.onchange = function (event) {
+    let reader = new FileReader();
+    reader.onload = function (event) {
+      let obj = JSON.parse(event.target.result);
+      for (let i = 0; i < obj.length; i++) {
+        if (!eventList.includes(obj[i]))
+          eventList.push(obj[i]);
+      }
+
+      fileSave();
+      const element = document.querySelectorAll("table > tbody > tr");
+      for (let i = 0; i < element.length; i++) {
+        const eventName = element[i].querySelector(".quest > .title span").textContent;
+        if (obj.includes(eventName))
+          element[i].classList.add('completed');
+      }
+    }
+    reader.readAsText(event.target.files[0]);
+  }
+
+  const buttonUploadText = document.createElement("label");
+  buttonUploadText.classList.add('alikeExIm');
+  buttonUploadText.for = "json-upload";
+  buttonUploadText.textContent = "Upload Completed Event List";
+  buttonUploadText.appendChild(buttonUpload);
+
+  const parent = document.getElementsByClassName("buttonExIm")[0];
+  parent.appendChild(buttonDownload);
+  parent.appendChild(buttonUploadText);
 }

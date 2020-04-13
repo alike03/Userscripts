@@ -2,7 +2,7 @@
 // @name        Monster Hunter World - Event Log
 // @description Keep track of the Event Quest Schedule. Mark completed ones and hide them if you want.
 // @author      alike03
-// @version     1.1
+// @version     1.2
 // @namespace   MHW_EventLog
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/MHW_EventLog-Icon.png
 // @supportURL  https://github.com/alike03/Userscripts/issues

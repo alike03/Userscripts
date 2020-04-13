@@ -17,6 +17,10 @@ Keep track of the Event Quest Schedule. Mark completed ones and hide them if you
 
 ## Changelog
 
+#### 1.2 (14 April 2020)
+
+- Added the option to export and import the List
+
 #### 1.1 (24 January 2020)
 
 - Removed jQuery completely (for small performance improvement)
