@@ -8,6 +8,11 @@ With this script, you can read the comments while watching the video. When you s
 
 ## Changelog
 
+#### 3.0.1 (14 April 2020)
+
+- Button color fixed for light mode
+- Chrome Button position and size fixed
+
 #### 3.0.0 (13 April 2020)
 
 - Docked Player size is now changeable in the settings, that can be opened with the button next to the search bar on YouTube (see Preview with red arrow below)

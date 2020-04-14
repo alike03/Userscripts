@@ -2,7 +2,7 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     3.0.0
+// @version     3.0.1
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/YouTubeDocking-Icon.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
@@ -12,12 +12,11 @@
 // @require     https://code.jquery.com/jquery-latest.js
 // ==/UserScript==
 
-let ver = '3.0.0';
-var save = {};
+let ver = '3.0.1';
+let save = {};
 
 let playerDocked = false;
 let trackPlayer = false;
-let smallPlayer = false;
 
 window.addEventListener("yt-navigate-start", deactivate);
 window.addEventListener("yt-navigate-finish", yt_navigate_finish);
@@ -54,7 +53,8 @@ function yt_navigate_finish() {
 function start_tracking() {
   trackPlayer = true;
   window.addEventListener("scroll", scrolling);
-  smallPlayer = $('#columns #movie_player').length;
+  //let smallPlayer = false;
+  //smallPlayer = $('#columns #movie_player').length;
 }
 
 function stop_tracking() {
@@ -77,6 +77,7 @@ function deactivate() {
     playerDocked = false;
   }
 }
+
 function addPlayerSize(boot, playerWidth = 533, playerHeight = 300) {
 
   if (boot) {
@@ -125,6 +126,7 @@ function addCSS() {
       left: 0 !important;
     }
     #alikeButton {
+      width: 30px;
       height: 30px;
       margin-right: 15px;
     }
@@ -214,7 +216,7 @@ function addCSS() {
 
 function addSettings() {
   //TODO: Add Ripple Effect
-  let icon = '<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%"><path d="M25,17 L17,17 L17,23 L25,23 L25,17 L25,17 Z M29,25 L29,10.98 C29,9.88 28.1,9 27,9 L9,9 C7.9,9 7,9.88 7,10.98 L7,25 C7,26.1 7.9,27 9,27 L27,27 C28.1,27 29,26.1 29,25 L29,25 Z M27,25.02 L9,25.02 L9,10.97 L27,10.97 L27,25.02 L27,25.02 Z" fill="#fff" id="ytp-id-23"></path></svg>';
+  let icon = '<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%"><path d="M25,17 L17,17 L17,23 L25,23 L25,17 L25,17 Z M29,25 L29,10.98 C29,9.88 28.1,9 27,9 L9,9 C7.9,9 7,9.88 7,10.98 L7,25 C7,26.1 7.9,27 9,27 L27,27 C28.1,27 29,26.1 29,25 L29,25 Z M27,25.02 L9,25.02 L9,10.97 L27,10.97 L27,25.02 L27,25.02 Z" fill="var(--yt-spec-icon-active-other)" id="ytp-id-23"></path></svg>';
 
   $("#end").prepend('<div id="alikeButton">' + icon + '</div>');
   $("#alikeButton svg").on("click", openSettings);
