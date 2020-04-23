@@ -8,6 +8,11 @@ With this script, you can read the comments while watching the video. When you s
 
 ## Changelog
 
+#### 3.0.2 (23 April 2020)
+
+- Fixed text in front of a video
+- Adjusted size input function 
+
 #### 3.0.1 (14 April 2020)
 
 - Button color fixed for light mode

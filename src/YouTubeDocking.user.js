@@ -2,7 +2,7 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     3.0.1
+// @version     3.0.2
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/YouTubeDocking-Icon.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
@@ -12,7 +12,7 @@
 // @require     https://code.jquery.com/jquery-latest.js
 // ==/UserScript==
 
-let ver = '3.0.1';
+let ver = '3.0.2';
 let save = {};
 
 let playerDocked = false;
@@ -109,7 +109,7 @@ function addCSS() {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      z-index: 3;
+      z-index: 1337;
       box-shadow: 0px 0px 25px 3px black;
       box-shadow: var(--shadow-elevation-16dp_-_box-shadow);
       background: black;
@@ -237,24 +237,25 @@ function openSettings() {
 
   $("#alikeSettings #width").val(save.size.width);
   $("#alikeSettings #height").val(save.size.height);
+  listenSettings();
+}
 
+function listenSettings() {  
   $("#alikeSettings #close-button, body iron-overlay-backdrop").on("click", closeSettings);
+
   $("#alikeSettings .alike-reset").on("click", function () {
     addPlayerSize(false);
     $("#alikeSettings #width").val(save.size.width);
     $("#alikeSettings #height").val(save.size.height);
   });
-  listenSettings();
-}
 
-function listenSettings() {
-  $('#alikeSettings .size input').bind('keyup paste', function (e) {
-    this.value = this.value.replace(/[^0-9]/g, '');
-    //if ((!(e.keyCode >= 48 && e.keyCode <= 57) && !(e.keyCode >= 96 && e.keyCode <= 105)) && e.keyCode !== 46 && e.keyCode !== 8 || $(this).val() > 999 && e.keyCode !== 46 && e.keyCode !== 8) {
-    //  e.preventDefault();
-    //} else {
-    //  addPlayerSize(false, $("#alikeSettings #width").val(), $("#alikeSettings #height").val());
-    ////}
+  $('#alikeSettings .size input').keydown(function(e) {
+    let charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+  });
+  
+  $('#alikeSettings .size input').keyup(function(e) {
     if ($(this).val() < 9999 && $(this).val() > 0) {
       addPlayerSize(false, $("#alikeSettings #width").val(), $("#alikeSettings #height").val());
     }
