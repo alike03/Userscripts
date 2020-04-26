@@ -2,7 +2,7 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     3.0.3
+// @version     3.0.4
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/YouTubeDocking-Icon.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
@@ -52,15 +52,17 @@ function loadSettings() {
 }
 
 function isNewerVersion (oldVer, newVer) {
-  const oldParts = oldVer.split('.')
-  const newParts = newVer.split('.')
+  let oldParts = ((oldVer === undefined || oldVer === null) ? 0 : oldVer.split('.'));
+  let newParts = newVer.split('.');
   for (var i = 0; i < newParts.length; i++) {
-    const a = parseInt(newParts[i]) || 0
-    const b = parseInt(oldParts[i]) || 0
-    if (a > b) return true
-    if (a < b) return false
+    let a = parseInt(newParts[i]) || 0;
+    let b = parseInt(oldParts[i]) || 0;
+    if (a > b) 
+      return true;
+    if (a < b) 
+      return false;
   }
-  return false
+  return false;
 }
 
 function fillObject(from, to) {
