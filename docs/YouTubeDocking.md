@@ -10,6 +10,11 @@ If there is anything you want to see. Feel free to ask about it.
 
 ## Changelog
 
+#### 3.0.5 (01 May 2020)
+
+- Added the option to customize the distance to corner
+- Fixed a bug for simulated small player
+
 #### 3.0.4 (26 April 2020)
 
 - Fixed a bug, which was caused by the update checker

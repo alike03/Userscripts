@@ -2,7 +2,7 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     3.0.4
+// @version     3.0.5
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/YouTubeDocking-Icon.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
@@ -37,11 +37,12 @@ function loadSettings() {
     size: {
       width: 533,
       height: 300,
+      distance: 20,
       small: false
     },
-    version: '3.0.3'
+    version: '3.0.5'
   }
-  
+
   if (isNewerVersion(save.version, saveTemp.version)) {
     save.version = saveTemp.version;
     alert("Update " + saveTemp.version + " for YouTube Docking is installed \nsee the changes in the Settings top right corner.");
@@ -51,15 +52,15 @@ function loadSettings() {
   fillObject(saveTemp, save);
 }
 
-function isNewerVersion (oldVer, newVer) {
+function isNewerVersion(oldVer, newVer) {
   let oldParts = ((oldVer === undefined || oldVer === null) ? 0 : oldVer.split('.'));
   let newParts = newVer.split('.');
   for (var i = 0; i < newParts.length; i++) {
     let a = parseInt(newParts[i]) || 0;
     let b = parseInt(oldParts[i]) || 0;
-    if (a > b) 
+    if (a > b)
       return true;
-    if (a < b) 
+    if (a < b)
       return false;
   }
   return false;
@@ -115,14 +116,16 @@ function deactivate() {
   }
 }
 
-function addPlayerSize(boot, playerWidth = 533, playerHeight = 300) {
+function addPlayerSize(boot, playerWidth = 533, playerHeight = 300, distance = 20) {
   if (boot) {
     playerWidth = save.size.width;
     playerHeight = save.size.height;
+    distance = save.size.distance;
   } else {
     $("#alikeStyle").remove();
     save.size.width = playerWidth;
     save.size.height = playerHeight;
+    save.size.distance = distance;
     localStorage.setItem("youtubeDOCK", JSON.stringify(save));
   }
 
@@ -132,6 +135,7 @@ function addPlayerSize(boot, playerWidth = 533, playerHeight = 300) {
     #movie_player.alike:not(.ytp-fullscreen) {
       width: ` + playerWidth + `px;
       height: ` + playerHeight + `px;
+      margin: ` + distance + `px;
     }
   `;
   document.head.appendChild(style);
@@ -143,8 +147,8 @@ function addCSS() {
   style.innerHTML = `
     #movie_player.alike:not(.ytp-fullscreen) {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 0;
+      right: 0;
       z-index: 1337;
       box-shadow: 0px 0px 25px 3px black;
       box-shadow: var(--shadow-elevation-16dp_-_box-shadow);
@@ -252,7 +256,7 @@ function addCSS() {
     }
 
     .alikeSmall .ytp-size-button {
-      display: none;
+      display: none !important;
     }
     .alikeSmall:not([fullscreen]) #player.ytd-watch-flexy,
     .alikeSmall:not([fullscreen]) #colmuns #player-container-inner {
@@ -362,15 +366,17 @@ function openSettings() {
   let footer = '<div class="alike-footer"><div><span>v' + save.version + ' - </span><a target="_blank" href="https://github.com/alike03/Userscripts/blob/master/docs/YouTubeDocking.md">Changelog</a></div><div><a target="_blank" href="https://github.com/alike03/Userscripts/issues">Report Issue</a></div></div>';
   let width = '<div class="alike-input-box size"><label for="width">Width:</label><input id="width" size="6" type="number" min="0" max="9999"><span>px</span></div>';
   let height = '<div class="alike-input-box size"><label for="height">Height:</label><input id="height" size="6" type="number" min="0" max="9999"><span>px</span></div>';
+  let distance = '<div class="alike-input-box size"><label for="distance">Distance:</label><input id="distance" size="6" type="number" min="0" max="9999"><span>px</span></div>';
   let reset = '<div class="alike-reset alike-break">Reset to the default size</div>';
   let smallP = '<div class="alike-small alike-break"><paper-checkbox id="checkbox" class="style-scope ytd-playlist-add-to-option-renderer" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false" style="--paper-checkbox-ink-size:54px;">Simulate default view mode<br>to enable docked controls (Alpha)</paper-checkbox></div>';
 
   //TODO: Animate Transition
   $("body").append('<iron-overlay-backdrop style="z-index: 3000;" opened="" class="opened"></iron-overlay-backdrop>');
-  $("body").append('<div id="alikeSettings">' + title + width + height + reset + smallP + footer + '</div>');
+  $("body").append('<div id="alikeSettings">' + title + width + height + distance + reset + smallP + footer + '</div>');
 
   $("#alikeSettings #width").val(save.size.width);
   $("#alikeSettings #height").val(save.size.height);
+  $("#alikeSettings #distance").val(save.size.distance);
   if (save.size.small) $("#alikeSettings .alike-small #checkbox").attr("active", "");
   listenSettings();
 }
@@ -382,6 +388,7 @@ function listenSettings() {
     addPlayerSize(false);
     $("#alikeSettings #width").val(save.size.width);
     $("#alikeSettings #height").val(save.size.height);
+    $("#alikeSettings #distance").val(save.size.distance);
   });
 
   $("#alikeSettings .alike-small paper-checkbox").on("click", function () {
@@ -401,7 +408,7 @@ function listenSettings() {
   });
   $('#alikeSettings .size input').keyup(function (e) {
     if ($(this).val() < 9999 && $(this).val() > 0) {
-      addPlayerSize(false, $("#alikeSettings #width").val(), $("#alikeSettings #height").val());
+      addPlayerSize(false, $("#alikeSettings #width").val(), $("#alikeSettings #height").val(), $("#alikeSettings #distance").val());
     }
   });
 }
