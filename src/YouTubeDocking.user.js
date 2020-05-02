@@ -9,6 +9,7 @@
 // @downloadURL https://raw.githubusercontent.com/alike03/Userscripts/master/src/YouTubeDocking.user.js
 // @updateURL   https://raw.githubusercontent.com/alike03/Userscripts/master/meta/YouTubeDocking.user.js
 // @match       https://*.youtube.com/*
+// @require     https://code.jquery.com/jquery-3.5.0.slim.min.js
 // @noframes
 // ==/UserScript==
 
