@@ -2,18 +2,17 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     3.0.5
+// @version     3.0.6
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/YouTubeDocking-Icon.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
 // @downloadURL https://raw.githubusercontent.com/alike03/Userscripts/master/src/YouTubeDocking.user.js
 // @updateURL   https://raw.githubusercontent.com/alike03/Userscripts/master/meta/YouTubeDocking.user.js
-// @match       *://*.youtube.com/*
-// @require     https://code.jquery.com/jquery-latest.js
+// @match       https://*.youtube.com/*
+// @noframes
 // ==/UserScript==
 
 let save = {};
-
 let playerDocked = false;
 let trackPlayer = false;
 
@@ -40,9 +39,9 @@ function loadSettings() {
       distance: 20,
       small: false
     },
-    version: '3.0.5'
+    version: '3.0.6'
   }
-
+  
   if (isNewerVersion(save.version, saveTemp.version)) {
     save.version = saveTemp.version;
     alert("Update " + saveTemp.version + " for YouTube Docking is installed \nsee the changes in the Settings top right corner.");
@@ -52,15 +51,15 @@ function loadSettings() {
   fillObject(saveTemp, save);
 }
 
-function isNewerVersion(oldVer, newVer) {
+function isNewerVersion (oldVer, newVer) {
   let oldParts = ((oldVer === undefined || oldVer === null) ? 0 : oldVer.split('.'));
   let newParts = newVer.split('.');
   for (var i = 0; i < newParts.length; i++) {
     let a = parseInt(newParts[i]) || 0;
     let b = parseInt(oldParts[i]) || 0;
-    if (a > b)
+    if (a > b) 
       return true;
-    if (a < b)
+    if (a < b) 
       return false;
   }
   return false;
@@ -255,6 +254,9 @@ function addCSS() {
       left: 0 !important;
     }
 
+    #columns #movie_player.alike > * {
+      display: none;
+    }
     .alikeSmall .ytp-size-button {
       display: none !important;
     }
@@ -401,10 +403,14 @@ function listenSettings() {
     localStorage.setItem("youtubeDOCK", JSON.stringify(save));
   });
 
-  $('#alikeSettings .size input').keydown(function (e) {
-    let charCode = (evt.which) ? evt.which : event.keyCode
-    if (charCode > 31 && (charCode < 48 || charCode > 57))
-      return false;
+  $('#alikeSettings .size input').keydown(function (event) {
+    if (!(event.ctrlKey || event.altKey
+                        || (47<event.keyCode && event.keyCode<58 && event.shiftKey==false) 
+                        || (95<event.keyCode && event.keyCode<106)
+                        || (event.keyCode==8) || (event.keyCode==9) 
+                        || (event.keyCode>34 && event.keyCode<40) 
+                        || (event.keyCode==46)))
+    return false;
   });
   $('#alikeSettings .size input').keyup(function (e) {
     if ($(this).val() < 9999 && $(this).val() > 0) {

@@ -10,6 +10,12 @@ If there is anything you want to see. Feel free to ask about it.
 
 ## Changelog
 
+#### 3.0.6 (01 May 2020)
+
+- Hidden the broken controls for not simulated small player
+- Blocked the script if it's embedded on another website
+- Reconfigured the input fields
+
 #### 3.0.5 (01 May 2020)
 
 - Added the option to customize the distance to corner
