@@ -2,7 +2,7 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     3.0.6
+// @version     3.0.7
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/YouTubeDocking-Icon.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
@@ -19,7 +19,7 @@ let trackPlayer = false;
 
 window.addEventListener("yt-navigate-start", deactivate);
 window.addEventListener("yt-navigate-finish", yt_navigate_finish);
-window.addEventListener("DOMContentLoaded", boot);
+boot();
 
 function boot() {
   loadSettings();
@@ -40,7 +40,7 @@ function loadSettings() {
       distance: 20,
       small: false
     },
-    version: '3.0.6'
+    version: '3.0.7'
   }
   
   if (isNewerVersion(save.version, saveTemp.version)) {
@@ -58,9 +58,9 @@ function isNewerVersion (oldVer, newVer) {
   for (var i = 0; i < newParts.length; i++) {
     let a = parseInt(newParts[i]) || 0;
     let b = parseInt(oldParts[i]) || 0;
-    if (a > b) 
+    if (a > b)
       return true;
-    if (a < b) 
+    if (a < b)
       return false;
   }
   return false;

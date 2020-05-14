@@ -10,6 +10,10 @@ If there is anything you want to see. Feel free to ask about it.
 
 ## Changelog
 
+#### 3.0.7 (15 May 2020)
+
+- Change in script load order to avoid errors
+
 #### 3.0.6 (01 May 2020)
 
 - Hidden the broken controls for not simulated small player
