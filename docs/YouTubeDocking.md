@@ -10,6 +10,14 @@ If there is anything you want to see. Feel free to ask about it.
 
 ## Changelog
 
+#### 3.0.8 (03 August 2020)
+
+- Added the option to maintain the ratio while changing the window size
+- Added the option to change the distance for each side separately
+- Changed the way how saved settings are integrated to the new update
+- Removed Update notification from private window
+- Changed settings layout
+
 #### 3.0.7 (15 May 2020)
 
 - Change in script load order to avoid errors

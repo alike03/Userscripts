@@ -2,7 +2,7 @@
 // @name        YouTube Docking
 // @description Read the comments while watching the video
 // @author      alike03
-// @version     3.0.7
+// @version     3.0.8
 // @namespace   youtubeDOCK
 // @icon        https://raw.githubusercontent.com/alike03/Userscripts/master/assets/YouTubeDocking-Icon.png
 // @supportURL  https://github.com/alike03/Userscripts/issues
@@ -14,12 +14,13 @@
 // ==/UserScript==
 
 let save = {};
+let saveLocal = {};
 let playerDocked = false;
 let trackPlayer = false;
 
+boot();
 window.addEventListener("yt-navigate-start", deactivate);
 window.addEventListener("yt-navigate-finish", yt_navigate_finish);
-boot();
 
 function boot() {
   loadSettings();
@@ -29,30 +30,42 @@ function boot() {
 }
 
 function loadSettings() {
-  if (localStorage.getItem("youtubeDOCK") != null) {
-    save = JSON.parse(localStorage.getItem("youtubeDOCK"));
-  }
-
-  let saveTemp = {
+  save = {
     size: {
-      width: 533,
-      height: 300,
-      distance: 20,
+      width: 640,
+      height: 360,
+      aspectRatio: {
+        active: true,
+        ratio: 1.7
+      },
       small: false
     },
-    version: '3.0.7'
-  }
-  
-  if (isNewerVersion(save.version, saveTemp.version)) {
-    save.version = saveTemp.version;
-    alert("Update " + saveTemp.version + " for YouTube Docking is installed \nsee the changes in the Settings top right corner.");
-    localStorage.setItem("youtubeDOCK", JSON.stringify(save));
+    distance: {
+      right: 20,
+      bottom: 20
+    },
+    version: '3.0.8'
   }
 
-  fillObject(saveTemp, save);
+  if (localStorage.getItem("youtubeDOCK") != null) {
+    saveLocal = JSON.parse(localStorage.getItem("youtubeDOCK"));
+
+    if (isNewerVersion(saveLocal.version, save.version)) {
+      alert("Update " + save.version + " for YouTube Docking is installed \nsee the changes in the Settings top right corner.");
+      saveLocal.version = save.version;
+    }
+  }
+
+  loadSave(save, saveLocal);
+  saveSettings();
 }
 
-function isNewerVersion (oldVer, newVer) {
+function saveSettings() {
+  let saveRaw = JSON.stringify(save);
+  localStorage.setItem("youtubeDOCK", saveRaw);
+}
+
+function isNewerVersion(oldVer, newVer) {
   let oldParts = ((oldVer === undefined || oldVer === null) ? 0 : oldVer.split('.'));
   let newParts = newVer.split('.');
   for (var i = 0; i < newParts.length; i++) {
@@ -66,16 +79,13 @@ function isNewerVersion (oldVer, newVer) {
   return false;
 }
 
-function fillObject(from, to) {
-  for (var key in from) {
-    if (from.hasOwnProperty(key)) {
-      if (Object.prototype.toString.call(from[key]) === '[object Object]') {
-        if (!to.hasOwnProperty(key)) {
-          to[key] = {};
-        }
-        fillObject(from[key], to[key]);
-      } else if (!to.hasOwnProperty(key)) {
-        to[key] = from[key];
+function loadSave(save, local) {
+  for (var key in save) {
+    if (local.hasOwnProperty(key)) {
+      if (Object.prototype.toString.call(save[key]) === '[object Object]') {
+        loadSave(save[key], local[key]);
+      } else {
+        save[key] = local[key];
       }
     }
   }
@@ -116,17 +126,19 @@ function deactivate() {
   }
 }
 
-function addPlayerSize(boot, playerWidth = 533, playerHeight = 300, distance = 20) {
+function addPlayerSize(boot, playerWidth = 533, playerHeight = 300, distanceR = 20, distanceB = 20) {
   if (boot) {
     playerWidth = save.size.width;
     playerHeight = save.size.height;
-    distance = save.size.distance;
+    distanceR = save.distance.right;
+    distanceB = save.distance.bottom;
   } else {
     $("#alikeStyle").remove();
     save.size.width = playerWidth;
     save.size.height = playerHeight;
-    save.size.distance = distance;
-    localStorage.setItem("youtubeDOCK", JSON.stringify(save));
+    save.distance.right = distanceR;
+    save.distance.bottom = distanceB;
+    saveSettings();
   }
 
   let style = document.createElement('style');
@@ -135,7 +147,7 @@ function addPlayerSize(boot, playerWidth = 533, playerHeight = 300, distance = 2
     #movie_player.alike:not(.ytp-fullscreen) {
       width: ` + playerWidth + `px;
       height: ` + playerHeight + `px;
-      margin: ` + distance + `px;
+      margin: 0 ` + distanceR + `px  ` + distanceB + `px 0;
     }
   `;
   document.head.appendChild(style);
@@ -183,12 +195,14 @@ function addCSS() {
     #alikeSettings a:hover {
       color: var(--yt-spec-text-primary);
     }
-    #alikeSettings .alike-header,
-    #alikeSettings .alike-footer {
+    #alikeSettings .alike-flex {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
+    }
+    #alikeSettings .alike-header,
+    #alikeSettings .alike-footer {
       margin-top: 20px;
     }
     #alikeSettings .alike-footer {
@@ -215,7 +229,7 @@ function addCSS() {
     }
     #alikeSettings .alike-input-box {
       height: 42px;
-      margin: 30px;
+      width: 160px;
       justify-content: space-between;
       border: 1px solid var(--yt-std-surface-400);
       background-color: var(--yt-std-surface-200);
@@ -224,6 +238,9 @@ function addCSS() {
       -ms-flex-align: var(--layout-center_-_-ms-flex-align);
       -webkit-align-items: var(--layout-center_-_-webkit-align-items);
       align-items: var(--layout-center_-_align-items);
+    }
+    #alikeSettings .alike-input-box:not(:first-child) {
+        margin-left: var(--ytd-margin-4x);
     }
     #alikeSettings .alike-input-box > * {
       color: var(--yt-spec-text-primary);
@@ -254,7 +271,6 @@ function addCSS() {
       top: 0 !important;
       left: 0 !important;
     }
-
     #columns #movie_player.alike > * {
       display: none;
     }
@@ -276,34 +292,6 @@ function addCSS() {
     }
   `;
   document.head.appendChild(style);
-}
-
-function hijackResize_OLD() {
-  if (save.size.small) {
-    if (!$("#page-manager ytd-watch-flexy").is('[theater]')) {
-      $("#page-manager ytd-watch-flexy").attr("theater", "");
-      $("#page-manager ytd-watch-flexy").attr("theater-requested_", "");
-    }
-
-    let checkExistTM = setInterval(function () {
-      if ($('#player-theater-container #player-container').length) {
-        $("ytd-watch-flexy.ytd-page-manager").addClass('alikeSmall');
-        $("#player-theater-container #player-container").appendTo($("#columns #player-container-inner"));
-        window.dispatchEvent(new Event('resize'));
-        clearInterval(checkExistTM);
-      }
-    }, 100);
-  } else {
-    let checkExistNM = setInterval(function () {
-      if ($('#columns #player-container').length) {
-        //$("#page-manager ytd-watch-flexy").removeAttr("theater").removeAttr("theater-requested_");
-        $("ytd-watch-flexy.ytd-page-manager").removeClass('alikeSmall');
-        $("#columns #player-container").appendTo($("#player-theater-container"));
-        window.dispatchEvent(new Event('resize'));
-        clearInterval(checkExistNM);
-      }
-    }, 100);
-  }
 }
 
 function hijackResize() {
@@ -329,21 +317,19 @@ function smallPlayerSize() {
   let checkExistST = setInterval(function () {
     if ($('ytd-watch-flexy.hide-skeleton').length) {
       $("#alikeStyleSmall").remove();
-      //playerHeight = padding-top: calc(var(--ytd-watch-flexy-height-ratio) / var(--ytd-watch-flexy-width-ratio) * 100%);
       let playerWidth = $("#columns #player").width();
       let playerHeight = $("#columns #player").height();
-      //playerWidth = playerHeight * 1.777;
       let playerLeft = $("#columns #player").offset().left;
 
       let style = document.createElement('style');
       style.setAttribute("id", "alikeStyleSmall");
       style.innerHTML = `
         .alikeSmall:not([fullscreen]) #player-theater-container {
-          width: ` + playerWidth + `px !important;
-          height: ` + playerHeight + `px !important;
-          left: ` + playerLeft + `px;
-        }
-      `;
+            width: ` + playerWidth + `px !important;
+            height: ` + playerHeight + `px !important;
+            left: ` + playerLeft + `px;
+            }
+        `;
       document.head.appendChild(style);
       clearInterval(checkExistST);
     }
@@ -365,23 +351,42 @@ function addSettings() {
 
 function openSettings() {
   let closeButton = '<yt-icon-button id="close-button" class="style-scope ytd-alike-settings"><button id="button"class="style-scope yt-icon-button" aria-label="Abbrechen"><yt-icon icon="close" class="style-scope ytd-alike-settings"><svg viewBox="0 0 24 24"preserveAspectRatio="xMidYMid meet" focusable="false"style="pointer-events: none; display: block; width: 100%; height: 100%;"class="style-scope yt-icon"><g class="style-scope yt-icon"><pathd="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"class="style-scope yt-icon"></path></g></svg></yt-icon></button></yt-icon-button>';
-  let title = '<div class="alike-header alike-break"><span>YouTube Docking</span>' + closeButton + '</div>';
-  let footer = '<div class="alike-footer"><div><span>v' + save.version + ' - </span><a target="_blank" href="https://github.com/alike03/Userscripts/blob/master/docs/YouTubeDocking.md">Changelog</a></div><div><a target="_blank" href="https://github.com/alike03/Userscripts/issues">Report Issue</a></div></div>';
-  let width = '<div class="alike-input-box size"><label for="width">Width:</label><input id="width" size="6" type="number" min="0" max="9999"><span>px</span></div>';
-  let height = '<div class="alike-input-box size"><label for="height">Height:</label><input id="height" size="6" type="number" min="0" max="9999"><span>px</span></div>';
-  let distance = '<div class="alike-input-box size"><label for="distance">Distance:</label><input id="distance" size="6" type="number" min="0" max="9999"><span>px</span></div>';
-  let reset = '<div class="alike-reset alike-break">Reset to the default size</div>';
-  let smallP = '<div class="alike-small alike-break"><paper-checkbox id="checkbox" class="style-scope ytd-playlist-add-to-option-renderer" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false" style="--paper-checkbox-ink-size:54px;">Simulate default view mode<br>to enable docked controls (Alpha)</paper-checkbox></div>';
+  let title = '<div class="alike-header alike-flex"><span>YouTube Docking</span>' + closeButton + '</div>';
+  let footer = '<div class="alike-footer alike-flex"><div><span>v' + save.version + ' - </span><a target="_blank" href="https://github.com/alike03/Userscripts/blob/master/docs/YouTubeDocking.md">Changelog</a></div><div><a target="_blank" href="https://github.com/alike03/Userscripts/issues">Report Issue</a></div></div>';
+
+  let keepRatio = '<div class="alike-keepRatio"><paper-checkbox id="checkbox" class="style-scope ytd-playlist-add-to-option-renderer" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false" style="--paper-checkbox-ink-size:54px;">Maintain the aspect ratio</paper-checkbox></div>';
+  let width = '<div class="alike-input-box size"><label for="width">Width:</label><input id="width" type="number" min="0" max="9999"><span>px</span></div>';
+  let height = '<div class="alike-input-box size"><label for="height">Height:</label><input id="height" type="number" min="0" max="9999"><span>px</span></div>';
+  let distance = '<div>Distance to Browser corners:</div>';
+  let distanceR = '<div class="alike-input-box size"><label for="distanceR">Right:</label><input id="distanceR" type="number" min="0" max="9999"><span>px</span></div>';
+  let distanceB = '<div class="alike-input-box size"><label for="distanceB">Bottom:</label><input id="distanceB" type="number" min="0" max="9999"><span>px</span></div>';
+  let reset = '<div class="alike-reset">Reset to default sizes</div>';
+  let smallP = '<div class="alike-small"><paper-checkbox id="checkbox" class="style-scope ytd-playlist-add-to-option-renderer" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false" style="--paper-checkbox-ink-size:54px;">Simulate default view mode to<br />enable docked controls</paper-checkbox></div>';
 
   //TODO: Animate Transition
   $("body").append('<iron-overlay-backdrop style="z-index: 3000;" opened="" class="opened"></iron-overlay-backdrop>');
-  $("body").append('<div id="alikeSettings">' + title + width + height + distance + reset + smallP + footer + '</div>');
+  $("body").append('<div id="alikeSettings">' +
+    encapsDiv(title, 'alike-break') +
+    encapsDiv(width + height, 'alike-flex') +
+    encapsDiv(keepRatio) +
+    encapsDiv(smallP) +
+    encapsDiv(reset, 'alike-break') +
+    encapsDiv(distance) +
+    encapsDiv(distanceR + distanceB, 'alike-flex alike-break') +
+    encapsDiv(footer) +
+    '</div>');
 
   $("#alikeSettings #width").val(save.size.width);
   $("#alikeSettings #height").val(save.size.height);
-  $("#alikeSettings #distance").val(save.size.distance);
+  $("#alikeSettings #distanceR").val(save.distance.right);
+  $("#alikeSettings #distanceB").val(save.distance.bottom);
+  if (save.size.aspectRatio.active) $("#alikeSettings .alike-keepRatio #checkbox").attr("active", "");
   if (save.size.small) $("#alikeSettings .alike-small #checkbox").attr("active", "");
   listenSettings();
+}
+
+function encapsDiv(inside, klass = '') {
+  return '<div' + (klass != '' ? ' class="' + klass + '"' : '') + '>' + inside + '</div>';
 }
 
 function listenSettings() {
@@ -391,7 +396,20 @@ function listenSettings() {
     addPlayerSize(false);
     $("#alikeSettings #width").val(save.size.width);
     $("#alikeSettings #height").val(save.size.height);
-    $("#alikeSettings #distance").val(save.size.distance);
+    $("#alikeSettings #distanceR").val(save.distance.right);
+    $("#alikeSettings #distanceB").val(save.distance.bottom);
+  });
+
+  $("#alikeSettings .alike-keepRatio paper-checkbox").on("click", function () {
+    if ($(this)[0].hasAttribute("checked")) {
+      save.size.aspectRatio.active = true;
+      save.size.aspectRatio.ratio = (save.size.width / save.size.height).toFixed(3);
+    } else {
+      save.size.aspectRatio.active = false;
+      save.size.aspectRatio.ratio = 1;
+    }
+
+    saveSettings();
   });
 
   $("#alikeSettings .alike-small paper-checkbox").on("click", function () {
@@ -401,21 +419,30 @@ function listenSettings() {
       save.size.small = false;
 
     hijackResize();
-    localStorage.setItem("youtubeDOCK", JSON.stringify(save));
+    saveSettings();
   });
 
   $('#alikeSettings .size input').keydown(function (event) {
-    if (!(event.ctrlKey || event.altKey
-                        || (47<event.keyCode && event.keyCode<58 && event.shiftKey==false) 
-                        || (95<event.keyCode && event.keyCode<106)
-                        || (event.keyCode==8) || (event.keyCode==9) 
-                        || (event.keyCode>34 && event.keyCode<40) 
-                        || (event.keyCode==46)))
-    return false;
+    if (!(event.ctrlKey || event.altKey ||
+        (47 < event.keyCode && event.keyCode < 58 && event.shiftKey == false) ||
+        (95 < event.keyCode && event.keyCode < 106) ||
+        (event.keyCode == 8) || (event.keyCode == 9) ||
+        (event.keyCode > 34 && event.keyCode < 40) ||
+        (event.keyCode == 46)))
+      return false;
   });
+
   $('#alikeSettings .size input').keyup(function (e) {
     if ($(this).val() < 9999 && $(this).val() > 0) {
-      addPlayerSize(false, $("#alikeSettings #width").val(), $("#alikeSettings #height").val(), $("#alikeSettings #distance").val());
+      if (save.size.aspectRatio.active) {
+        if ($(this).attr('id') == 'width') {
+          $("#alikeSettings #height").val(Math.round($("#alikeSettings #width").val() / save.size.aspectRatio.ratio));
+        } else {
+          $("#alikeSettings #width").val(Math.round($("#alikeSettings #height").val() * save.size.aspectRatio.ratio));
+        }
+      }
+
+      addPlayerSize(false, $("#alikeSettings #width").val(), $("#alikeSettings #height").val(), $("#alikeSettings #distanceR").val(), $("#alikeSettings #distanceB").val());
     }
   });
 }
